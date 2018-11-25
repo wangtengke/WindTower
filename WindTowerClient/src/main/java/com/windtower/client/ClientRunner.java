@@ -1,6 +1,7 @@
 package com.windtower.client;
 
 import com.windtower.client.Controller.ClientBootController;
+import com.windtower.client.Controller.ClientBootInit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,7 +11,7 @@ import sun.tools.jar.CommandLine;
 @Slf4j
 public class ClientRunner implements CommandLineRunner{
     @Autowired
-    private ClientBootController clientBootController;
+    protected ClientBootInit clientBootInit;
     @Override
     public void run(String... args) throws Exception {
         try{
@@ -19,7 +20,7 @@ public class ClientRunner implements CommandLineRunner{
                 programToRun = args[0];
             }
             if("-fu".equalsIgnoreCase(programToRun)){
-                clientBootController.start();
+                clientBootInit.start();
                 log.info("-fu start!");
             }
             else if("-su".equalsIgnoreCase(programToRun)){

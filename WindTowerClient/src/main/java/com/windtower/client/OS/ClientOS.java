@@ -4,6 +4,9 @@ import com.windtower.client.Controller.ClientBootController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @program: windtower
  *
@@ -16,11 +19,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClientOS {
     @Autowired
-    ClientBootController clientBootController;
+    protected ClientBootController clientBootController;
+    @Autowired
+    protected WindTowerBootloader windTowerBootloader;
+    @Autowired
+    protected WindTowerOSContext driveUnitOSContext;
+    private String windtowerID;
+    protected Map<String, Object> params = new HashMap<String, Object>();
     public void load(){
 
     }
-    public void loadBasicAndInit(String windtowerID){
+    public void loadBasicAndInit(String windtowerID) throws Exception {
+        this.windtowerID = windtowerID;
+        putParams(true);
+        windTowerBootloader.load(params);
+    }
+
+    private void putParams(boolean isSingle) {
+        params.put("isSingle", isSingle);
+        params.put("context", driveUnitOSContext);
+        params.put("windtowerID",windtowerID);
 
     }
 }
