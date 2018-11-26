@@ -17,14 +17,34 @@ import java.util.concurrent.LinkedBlockingQueue;
  **/
 @Slf4j
 public class JsscComTrans extends AbsComTrans implements SerialPortEventListener,Runnable{
+    //缓存区最大数据数量
+    protected final static int RECV_BUF_MAX_LEN = 320;
 
     private SerialPort sPort;
+
+    /**
+     *
+     */
+    private int state = 0;
+    /**
+     * 索引值
+     */
+    private int index = 0;
+    /**
+     * 数据buf
+     */
+    private byte[] msgPack = new byte[28];
     //黑匣子
     private  IWindTowerBlackBox blackBox;
     //数据帧队列
     private BlockingQueue<Arm2ComputerNormalFrame> arm2ComputerNormalFrames;
     //队列长度
     private int FrameQueueLen;
+
+    private Object serialLock = new Object();
+
+    private int count = 0;
+
     public JsscComTrans(String windtowerID, String port, int baudRate, int databit, int stopbit, int paritybit, int FrameQueueLen, IWindTowerBlackBox blackBox) {
         this.port = port;
         this.baudRate = baudRate;
@@ -71,7 +91,17 @@ public class JsscComTrans extends AbsComTrans implements SerialPortEventListener
 
     @Override
     public boolean close() throws Exception {
-        return false;
+        log.info("close|called");
+        try {
+            synchronized (serialLock){
+                boolean isSuccess = sPort.closePort();
+                isConnected = false;
+                return isSuccess;
+            }
+        } catch (Exception e) {
+            log.error("", e);
+            return false;
+        }
     }
 
     @Override
@@ -97,6 +127,128 @@ public class JsscComTrans extends AbsComTrans implements SerialPortEventListener
 
     @Override
     public void serialEvent(SerialPortEvent serialPortEvent) {
+        int eventVal = serialPortEvent.getEventValue();
+        boolean isPortOpened = sPort.isOpened();
+        log.info(String.format("serialEvent|called|eventVal:%d|isOpen:%b", eventVal, isPortOpened));
+        try {
+            int eventValue = serialPortEvent.getEventValue();
+            if(eventValue > 0){
+                log.info(String.format("serialEvent|buf readed|eventVal:%d", eventValue));
+                byte[] buf = sPort.readBytes();
+                int bufferSize = buf.length;
+                log.info(String.format("serialEvent|buf readed|bufferSize:%d", bufferSize));
+                if(bufferSize > RECV_BUF_MAX_LEN) {
+                    log.info(String.format("serialEvent|bufLen:%d|Too many bucketId in serial port recv buffer!!", buf.length));
+                    //return;
+                }
+                process(buf);
+                log.info("serialEvent|done");
+            }
+        } catch (Exception e) {
+            log.error("", e);
+        }
+    }
 
+    private void process(byte[] buf) {
+        try {
+            for(int i=0;i<buf.length;i++){
+                byte newData = buf[i];
+                switch (state){
+                    case 0:
+                        index = 0;
+                        // ??????????
+                        if (newData == (byte)0xaa) {
+                            state = 1;
+                            msgPack[index++] = newData;
+                        }
+                        break;
+                    case 1:
+                        msgPack[index++] = newData;
+                        if(index==28){
+                            if (msgPack[27] == (byte)0x07) {
+                                log.info("frame right!");
+                                Arm2ComputerNormalFrame frame = new Arm2ComputerNormalFrame(msgPack);
+                                boolean isPass = arm2ComputerNormalFrames.offer(frame);
+                                log.info(String.format("offer frame to queue:%b",isPass));
+                            }
+                            state = 0;
+                        }
+                        else if(index>28){
+                            state = 0;
+                        }
+                        break;
+                }
+            }
+//            Arm2ComputerNormalFrame frame = new Arm2ComputerNormalFrame(buf);
+//            for(int i=0;i<buf.length;i++){
+//                byte newData = buf[i];
+//                switch (state) {
+//                    // ?????
+//                    case 0:
+//                        index = 0;
+//                        // ??????????
+//                        if (newData == (byte)0xaa) {
+//                            state = 1;
+//                            msgPack[index++] = newData;
+//                        }
+//                        break;
+//                    // ????????
+//                    case 1:
+//                        int tag = (newData >> 6) & (byte)0x01;
+//                        if (tag == 0) {
+//                            state = 2;
+//                        } else if (tag == 1) {
+//                            state = 2;
+//                        }
+//                        msgPack[index++] = newData;
+//                        break;
+//                    // ???????32?????
+//                    case 2:
+//                        msgPack[index++] = newData;
+//                        if (index == 48) {
+//                            // ???????????????????
+//                            if (msgPack[47] == (byte)0x55) {
+////                                frameIntervalAnalyzer.add2Analysis();
+//                                if (!checkSumFrame(msgPack, state)) {
+//                                    log.info("=== sum error ===");
+//                                    continue;
+//                                }
+//                                Arm2ComputerNormalFrame frame = new Arm2ComputerNormalFrame(msgPack);
+//                                //???????
+//                                blackBox.record(frame);
+//                                totalFrame++;
+//							/*if(observer != null){
+//								synchronized(observer) {
+//									observer.processReadedDSPFrame(frame);
+//								}
+//							}*/
+//                                count = (count > 10000 ? 0 : count++);
+//                                log.info(String.format("process|size:%d|count:%d", arm2ComputerNormalFrames.size(),count));
+//                                if(frameFilters != null) {
+//                                    boolean flags= frameFilters.doFilter(frame);
+//                                    logger.info("process|pass doFilter|flags:" + flags);
+//                                    if(flags) {
+//                                        frame.errno = (short) (0xff & frame.errno);
+//                                        boolean isPass = dsp2ComputerNormalFrames.offer(frame);
+//                                    }
+//                                }
+//                                state = 0;
+//                            }
+//                            // ?????????????
+//                            else {
+//                                state = 0;
+//                            }
+//                        }
+//                        else if(index>48){
+//                            state = 0;
+//                        }
+//                        break;
+//                }
+//            }
+
+        } catch (Exception e) {
+            //exceptionObserver.onException(DriveUnitExceptionCode.COM_READ_EXCEPTION, "com read error", e,null);
+            log.error("",e);
+        }
     }
 }
