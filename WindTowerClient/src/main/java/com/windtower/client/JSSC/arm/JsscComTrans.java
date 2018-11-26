@@ -122,7 +122,39 @@ public class JsscComTrans extends AbsComTrans implements SerialPortEventListener
     //启动串口程序
     @Override
     public void run() {
+        while(true) {
+            try {
 
+                Arm2ComputerNormalFrame frame = getFrameQueueTake();
+                log.info("JsscCommComTrans|arm consumer take frame");
+
+                if(observer != null){
+                    synchronized(observer) {
+                        observer.processReadedArmFrame(frame);
+                    }
+                }
+            } catch ( Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+    //从数据帧队列中那frame
+    private Arm2ComputerNormalFrame getFrameQueueTake() throws Exception {
+        int queueLen = this.FrameQueueLen;
+        int warningLen = Math.max(queueLen * 4 / 5, 1);
+        if(arm2ComputerNormalFrames.size() > warningLen) {
+            //dsp2ComputerNormalFrames.clear();
+            //?????????????frame
+            log.info("getFrameQueueTake|arm2ComputerNormalFrames {} size"+arm2ComputerNormalFrames.size());
+            Arm2ComputerNormalFrame frame = null;
+            while(arm2ComputerNormalFrames.size() > 0) {
+                log.info("dsp2ComputerNormalFrames|discard frame|dsp2ComputerNormalFrames size"+arm2ComputerNormalFrames.size());
+                frame = arm2ComputerNormalFrames.take();
+            }
+            return frame;
+        }
+        return arm2ComputerNormalFrames.take();
     }
 
     @Override
