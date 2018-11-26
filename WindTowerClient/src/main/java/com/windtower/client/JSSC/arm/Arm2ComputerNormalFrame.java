@@ -1,5 +1,6 @@
 package com.windtower.client.JSSC.arm;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
@@ -12,6 +13,7 @@ import java.io.DataInputStream;
  * @create: 2018-11-21
  **/
 @Slf4j
+@Data
 public class Arm2ComputerNormalFrame {
     //字节数据
     public byte [] bytes;
@@ -29,6 +31,7 @@ public class Arm2ComputerNormalFrame {
     private int AngleY;
     //数据长度
     private int DataSize;
+    public Arm2ComputerNormalFrame(){}
     public Arm2ComputerNormalFrame(byte[] content) {
         bytes = new byte[28];
         for(int i=0;i<28;i++){

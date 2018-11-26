@@ -23,6 +23,8 @@ public class ClientOS {
     @Autowired
     protected WindTowerBootloader windTowerBootloader;
     @Autowired
+    protected WindTowerBootloaderSimulation windTowerBootloaderSimulation;
+    @Autowired
     protected WindTowerOSContext driveUnitOSContext;
     private String windtowerID;
     protected Map<String, Object> params = new HashMap<String, Object>();
@@ -35,10 +37,17 @@ public class ClientOS {
         windTowerBootloader.load(params);
     }
 
+    public void loadSimulationBasicAndInit(String windtowerID) throws Exception {
+        this.windtowerID = windtowerID;
+        putParams(true);
+        windTowerBootloaderSimulation.load(params);
+    }
     private void putParams(boolean isSingle) {
         params.put("isSingle", isSingle);
         params.put("context", driveUnitOSContext);
         params.put("windtowerID",windtowerID);
 
     }
+
+
 }
