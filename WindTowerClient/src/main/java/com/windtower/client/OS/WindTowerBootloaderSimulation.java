@@ -52,10 +52,13 @@ public class WindTowerBootloaderSimulation implements IWindTowerBootloader {
 
     @Override
     public IComTrans initCOM(IWindTowerBlackBox blackbox) throws Exception {
+
         SimulationComTrans comTranser = new SimulationComTrans();
-        comTranser.init();
+        SimulationComTrans comTranser2 = new SimulationComTrans();
         comTranser.connect();
+        comTranser2.connect();
         new Thread(comTranser).start();
+        new Thread(comTranser2).start();
         return comTranser;
     }
 

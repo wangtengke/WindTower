@@ -78,7 +78,7 @@ public class WindTowerStatusMonitorService implements IWindTowerStatusMonitorSer
             Arm2ComputerNormalFrame frame = (Arm2ComputerNormalFrame)data;
             if(this.isServiceStart) {
                 onNormalMsgArrival(frame);
-                this.context.updateDspState(frame);
+                this.context.updateArmState(frame);
             } else {
                 log.info("onMessage|service is not start");
             }

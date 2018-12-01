@@ -1,9 +1,14 @@
 package com.windtower.client.OS;
 
 import com.windtower.client.JSSC.arm.Arm2ComputerNormalFrame;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @program: windtower
@@ -13,10 +18,12 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 @Slf4j
+@Data
 public class WindTowerOSContext {
+    //数据帧队列
+    public static BlockingQueue<Arm2ComputerNormalFrame> arm2ComputerNormalFrames = new LinkedBlockingQueue<Arm2ComputerNormalFrame>();
+    public void updateArmState(Arm2ComputerNormalFrame frame) {
+        log.info("updateArmState|called");
 
-
-    public void updateDspState(Arm2ComputerNormalFrame frame) {
-        log.info("updateDspState|called");
     }
 }

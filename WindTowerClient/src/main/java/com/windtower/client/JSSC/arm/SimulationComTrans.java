@@ -1,5 +1,6 @@
 package com.windtower.client.JSSC.arm;
 
+import com.windtower.client.OS.WindTowerOSContext;
 import com.windtower.config.client.SimulationProperties;
 import com.windtower.config.client.WindTowerProperties;
 import jssc.SerialPortEvent;
@@ -7,6 +8,7 @@ import jssc.SerialPortEventListener;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Random;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * @program: windtower
@@ -17,6 +19,8 @@ import java.util.Random;
 @Slf4j
 public class SimulationComTrans extends AbsComTrans implements Runnable{
     private Object lock;
+    //数据帧队列
+    protected WindTowerOSContext context;
     public SimulationComTrans() {
         this.lock = new Object();
     }
@@ -59,11 +63,12 @@ public class SimulationComTrans extends AbsComTrans implements Runnable{
                 log.info(String.format("head: %d|WindFarmId: %d|TowerId: %d|SensorId: %d|AngleX: %d|AngleY: %d|DataSize: %d",
                         frame.getHead(),frame.getWindFarmId(),frame.getTowerId(),frame.getSensorId(),frame.getAngleX(),frame.getAngleY(),frame.getDataSize()));
                 log.info("JsscCommComTrans|arm consumer take frame");
-
+                WindTowerOSContext.arm2ComputerNormalFrames.offer(frame);
                 if(observer != null){
                     synchronized(observer) {
                         //todo observer观察者需要实现类
-                        observer.processReadedArmFrame(frame);
+                        Arm2ComputerNormalFrame frame1 = WindTowerOSContext.arm2ComputerNormalFrames.take();
+                        observer.processReadedArmFrame(frame1);
                     }
                 }
 //                filter(frame);
