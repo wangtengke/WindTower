@@ -1,6 +1,7 @@
 package com.windtower.client.OS;
 
 import com.windtower.client.Interfaces.IWindTowerBootloader;
+import com.windtower.client.Interfaces.IWindTowerRing0Resource;
 import com.windtower.client.JSSC.arm.SimulationComTrans;
 import com.windtower.client.JSSC.arm.WindTowerBlackBoxImpl;
 import com.windtower.client.JSSC.interfaces.IComTrans;
@@ -56,5 +57,12 @@ public class WindTowerBootloaderSimulation implements IWindTowerBootloader {
         comTranser.connect();
         new Thread(comTranser).start();
         return comTranser;
+    }
+
+    @Override
+    public IWindTowerRing0Resource exchangeResourceOwner() {
+        WindTowerRing0Resource retResource = this.resource;
+        this.resource = null;
+        return retResource;
     }
 }

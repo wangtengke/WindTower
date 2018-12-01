@@ -7,4 +7,8 @@ package com.windtower.client.OS;
 public enum WindTowerCommonBusMsgType {
     Normal,
     Error,
+    /**
+     * ARM上报数据
+     */
+    ARM_FRAME_REPORT,
 }

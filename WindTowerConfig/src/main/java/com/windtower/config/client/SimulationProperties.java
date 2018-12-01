@@ -30,7 +30,6 @@ public class SimulationProperties {
     }
     //
     public void init(){
-        //todo 读取Properties配置文件 fix
         try{
             props = new Properties();
             props.load((this.getClass().getResourceAsStream("/conf/simulation.properties")));

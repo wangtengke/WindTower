@@ -1,5 +1,7 @@
 package com.windtower.client.OS;
 
+import com.windtower.client.JSSC.arm.Arm2ComputerNormalFrame;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +12,11 @@ import org.springframework.stereotype.Component;
  * @create: 2018-11-25
  **/
 @Component
-@Lazy
+@Slf4j
 public class WindTowerOSContext {
 
 
+    public void updateDspState(Arm2ComputerNormalFrame frame) {
+        log.info("updateDspState|called");
+    }
 }

@@ -58,7 +58,14 @@ public class SimulationComTrans extends AbsComTrans implements Runnable{
                 assemFrame(frame);
                 log.info(String.format("head: %d|WindFarmId: %d|TowerId: %d|SensorId: %d|AngleX: %d|AngleY: %d|DataSize: %d",
                         frame.getHead(),frame.getWindFarmId(),frame.getTowerId(),frame.getSensorId(),frame.getAngleX(),frame.getAngleY(),frame.getDataSize()));
+                log.info("JsscCommComTrans|arm consumer take frame");
 
+                if(observer != null){
+                    synchronized(observer) {
+                        //todo observer观察者需要实现类
+                        observer.processReadedArmFrame(frame);
+                    }
+                }
 //                filter(frame);
 //                if (null != observer && !model.isClearFrame()) { observer.processReadedDSPFrame(frame); }
             }

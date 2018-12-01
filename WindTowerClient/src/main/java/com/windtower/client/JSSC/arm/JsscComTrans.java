@@ -130,11 +130,11 @@ public class JsscComTrans extends AbsComTrans implements SerialPortEventListener
 
                 if(observer != null){
                     synchronized(observer) {
+                        //todo observer观察者需要实现类
                         observer.processReadedArmFrame(frame);
                     }
                 }
             } catch ( Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

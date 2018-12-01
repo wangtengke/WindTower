@@ -29,6 +29,7 @@ public interface IWindTowerBootloader {
      * @throws Exception
      */
     public IComTrans initCOM(IWindTowerBlackBox blackbox) throws Exception;
+
     /**
      * 获取日志地址
      * @return
@@ -38,6 +39,6 @@ public interface IWindTowerBootloader {
      * 核心资源移交，切记，只能调用一次，首次返回资源对象，之后全部返回null
      * @return
      */
-//    public IDriveUnitRing0Resource exchangeResourceOwner();
+    public IWindTowerRing0Resource exchangeResourceOwner();
 
 }
