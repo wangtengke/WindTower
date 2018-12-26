@@ -45,6 +45,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.intel.analytics.bigdl.core.native.opencv/opencv-java-win64 -->
+        <dependency>
+            <groupId>com.intel.analytics.bigdl.core.native.opencv</groupId>
+            <artifactId>opencv-java-win64</artifactId>
+            <version>0.7.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

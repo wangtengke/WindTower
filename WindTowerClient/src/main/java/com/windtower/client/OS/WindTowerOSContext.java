@@ -1,14 +1,20 @@
 package com.windtower.client.OS;
 
+import com.windtower.client.Entity.Frame;
 import com.windtower.client.JSSC.arm.Arm2ComputerNormalFrame;
+import com.windtower.client.Repository.FrameRepository;
+import javafx.util.converter.DateTimeStringConverter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
+import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.*;
 
 /**
  * @program: windtower
@@ -20,9 +26,25 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Slf4j
 @Data
 public class WindTowerOSContext {
+    @Resource
+    FrameRepository frameRepository;
     //数据帧队列
     public static BlockingQueue<Arm2ComputerNormalFrame> arm2ComputerNormalFrames = new LinkedBlockingQueue<Arm2ComputerNormalFrame>();
+    public ExecutorService frame2DB = Executors.newSingleThreadExecutor();
     public void updateArmState(Arm2ComputerNormalFrame frame) {
+        frame2DB.submit(()->{
+            Frame frame1 = new Frame();
+            frame1.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS") .format(new Date()));
+            frame1.setAngleX(frame.getAngleX());
+            frame1.setAngleY(frame.getAngleY());
+            frame1.setBytes(frame.getBytes());
+            frame1.setDataSize(frame.getDataSize());
+            frame1.setHead(frame.getHead());
+            frame1.setSensorId(frame.getSensorId());
+            frame1.setTowerId(frame.getTowerId());
+            frame1.setWindFarmId(frame.getWindFarmId());
+            frameRepository.saveAndFlush(frame1);
+        });
         log.info("updateArmState|called");
 
     }

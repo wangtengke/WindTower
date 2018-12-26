@@ -44,7 +44,10 @@ public class ClientOS {
     public void loadBasicAndInit(String windtowerID) throws Exception {
         this.windtowerID = windtowerID;
         putParams(true);
+        busRegister();
         windTowerBootloader.load(params);
+        kernel.load(windTowerBootloader,params);
+        windTowerInitService.startService(params);
     }
 
     public void loadSimulationBasicAndInit(String windtowerID) throws Exception {
