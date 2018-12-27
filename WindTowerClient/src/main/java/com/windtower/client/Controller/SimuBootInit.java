@@ -1,10 +1,13 @@
 package com.windtower.client.Controller;
 
 import com.windtower.client.OS.ClientOS;
+import com.windtower.client.UI.WindTowerView;
 import com.windtower.config.client.WindTowerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.swing.*;
 
 /**
  * @program: windtower
@@ -17,9 +20,12 @@ import org.springframework.stereotype.Component;
 public class SimuBootInit {
     @Autowired
     private ClientOS clientOS;
+    private WindTowerView view;
     public void start(){
         log.info("bootInit|called");
 //        WindTowerProperties.getInstance().init();
+        WindTowerView view = new WindTowerView();
+        this.view = view;
         String windtowerID= WindTowerProperties.getInstance().getWindTowerID();
         log.info("windtowerID is [{}]",windtowerID);
         try {

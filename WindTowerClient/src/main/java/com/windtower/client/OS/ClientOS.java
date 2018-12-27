@@ -3,6 +3,8 @@ package com.windtower.client.OS;
 import com.windtower.client.Controller.ClientBootController;
 import com.windtower.client.Interfaces.*;
 import com.windtower.client.Service.WindTowerStatusMonitorService;
+import com.windtower.client.Service.WindTowerUIService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,8 @@ public class ClientOS {
     @Autowired
     protected IWindTowerStatusMonitorService windTowerStatusMonitorService;
     @Autowired
+    protected IWindTowerUIService windTowerUIService;
+    @Autowired
     protected IWindTowerInitService windTowerInitService;
     private String windtowerID;
     protected Map<String, Object> params = new HashMap<String, Object>();
@@ -64,6 +68,7 @@ public class ClientOS {
     private void busRegister() throws Exception {
         windTowerCommonBus.register(kernel);
         windTowerCommonBus.register(windTowerStatusMonitorService);
+        windTowerCommonBus.register(windTowerUIService);
     }
 
     private void putParams(boolean isSingle) {
@@ -72,6 +77,7 @@ public class ClientOS {
         params.put("windtowerID",windtowerID);
         params.put("bus",windTowerCommonBus);
         params.put(WindTowerStatusMonitorService.SERVICE_NAME,windTowerStatusMonitorService);
+        params.put(WindTowerUIService.SERVICE_NAME,windTowerUIService);
 
     }
 

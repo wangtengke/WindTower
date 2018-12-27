@@ -3,6 +3,7 @@ package com.windtower.client.Service;
 import com.windtower.client.Interfaces.IWindTowerCommonBus;
 import com.windtower.client.Interfaces.IWindTowerInitService;
 import com.windtower.client.Interfaces.IWindTowerStatusMonitorService;
+import com.windtower.client.Interfaces.IWindTowerUIService;
 import com.windtower.client.OS.WindTowerCommonBusMsg;
 import com.windtower.client.OS.WindTowerOSContext;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,8 @@ public class WindTowerInitService implements IWindTowerInitService {
     protected IWindTowerCommonBus bus;
 
     protected IWindTowerStatusMonitorService windTowerStatusMonitorService;
+
+    protected IWindTowerUIService windTowerUIService;
     protected boolean isServiceStart = false;
     @Override
     public String getServiceName() {
@@ -51,6 +54,7 @@ public class WindTowerInitService implements IWindTowerInitService {
 //            pd = (DriveUnitPhysicalDescription)params.get("pd");
             bus = (IWindTowerCommonBus) params.get("bus");
             windTowerStatusMonitorService = (IWindTowerStatusMonitorService) params.get(WindTowerStatusMonitorService.SERVICE_NAME);
+            windTowerUIService            = (IWindTowerUIService) params.get(WindTowerUIService.SERVICE_NAME);
             //todo 通信服务，与后台交互时需要使用
 //            communicator = (IDriveUnitComputerCommunicationService)params.get("communicator");
             try {

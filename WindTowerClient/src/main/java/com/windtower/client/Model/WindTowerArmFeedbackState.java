@@ -10,15 +10,15 @@ import java.io.Serializable;
  **/
 public class WindTowerArmFeedbackState implements Serializable{
     //数据头 oxaa
-    private int head;
+    public int head;
     //风场编号
-    private int WindFarmId;
+    public int WindFarmId;
     //塔筒编号
-    private int TowerId;
+    public int TowerId;
     //传感器编号
-    private int SensorId;
+    public int SensorId;
     //X轴数据
-    private int AngleX;
+    public int AngleX;
     //Y轴数据
-    private int AngleY;
+    public int AngleY;
 }

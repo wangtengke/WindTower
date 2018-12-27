@@ -18,19 +18,19 @@ public class Arm2ComputerNormalFrame {
     //字节数据
     public byte [] bytes;
     //数据头 正确值 111
-    private int head;
+    public int head;
     //风场编号
-    private int WindFarmId;
+    public int WindFarmId;
     //塔筒编号
-    private int TowerId;
+    public int TowerId;
     //传感器编号
-    private int SensorId;
+    public int SensorId;
     //X轴数据
-    private int AngleX;
+    public int AngleX;
     //Y轴数据
-    private int AngleY;
+    public int AngleY;
     //数据长度
-    private int DataSize;
+    public int DataSize;
     public Arm2ComputerNormalFrame(){}
     public Arm2ComputerNormalFrame(byte[] content) {
         bytes = new byte[28];
