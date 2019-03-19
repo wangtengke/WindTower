@@ -1,4 +1,4 @@
-package cn.WindElectricity.VideoDemo;
+package com.windtower.client.UI.camera.VideoDemo;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;

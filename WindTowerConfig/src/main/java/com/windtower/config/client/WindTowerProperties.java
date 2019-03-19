@@ -71,4 +71,10 @@ public class WindTowerProperties {
     public int getDspQueueLen() {
         return Integer.valueOf(this.props.getProperty("dsp_queue_len","20"));
     }
+    public float getDemarcateXAngle() {
+        return Float.valueOf(this.props.getProperty("DemarcateXAngle","90"));
+    }
+    public float getDemarcateYAngle() {
+        return Float.valueOf(this.props.getProperty("DemarcateYAngle","90"));
+    }
 }

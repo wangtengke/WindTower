@@ -1,11 +1,15 @@
 package com.windtower.client.Service;
 
+import com.windtower.client.Controller.ClientBootInit;
+import com.windtower.client.Controller.SimuBootInit;
 import com.windtower.client.Interfaces.IWindTowerCommonBus;
 import com.windtower.client.Interfaces.IWindTowerUIService;
 import com.windtower.client.OS.WindTowerCommonBusMsg;
 import com.windtower.client.OS.WindTowerOSContext;
+import com.windtower.client.UI.WindTowerModel;
 import com.windtower.client.UI.interfaces.IWindTowerEngineObserver;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -21,7 +25,10 @@ import java.util.Map;
 public class WindTowerUIService implements IWindTowerUIService,Runnable {
     public static String REGISTER_NAME = "uiService";
     public static String SERVICE_NAME = "uiService";
-
+    @Autowired
+    protected SimuBootInit simuBootInit;
+    @Autowired
+    protected ClientBootInit clientBootInit;
     protected WindTowerOSContext context;
 
     protected boolean isServiceStart = false;
@@ -41,13 +48,15 @@ public class WindTowerUIService implements IWindTowerUIService,Runnable {
     private void processMessage() {
         while (true) {
             try {
-                engineObserver.updateModel(context.getModel());
+                clientBootInit.updateModel(context.getModel());
+                Thread.sleep(20);
             }
             catch (Exception e){
                 log.error("",e);
             }
         }
     }
+
 
     @Override
     public String getServiceName() {

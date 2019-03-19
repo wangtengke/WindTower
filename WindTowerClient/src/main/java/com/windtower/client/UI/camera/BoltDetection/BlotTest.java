@@ -1,4 +1,4 @@
-package cn.WindElectricity.BoltDetection;
+package com.windtower.client.UI.camera.BoltDetection;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

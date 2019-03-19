@@ -1,6 +1,6 @@
-package cn.WindElectricity.FaceDetection;
+package com.windtower.client.UI.camera.FaceDetection;
 
-import cn.WindElectricity.FaceDetection.utils.Utils;
+import com.windtower.client.UI.camera.FaceDetection.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;

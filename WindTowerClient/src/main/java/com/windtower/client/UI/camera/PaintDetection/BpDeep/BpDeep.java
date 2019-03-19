@@ -1,4 +1,4 @@
-package cn.WindElectricity.PaintDetection.BpDeep;
+package com.windtower.client.UI.camera.PaintDetection.BpDeep;
 
 import java.util.Random;
 

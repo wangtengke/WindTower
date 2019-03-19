@@ -1,7 +1,9 @@
 package com.windtower.client.Controller;
 
 import com.windtower.client.OS.ClientOS;
+import com.windtower.client.UI.WindTowerModel;
 import com.windtower.client.UI.WindTowerView;
+import com.windtower.client.UI.interfaces.IWindTowerEngineObserver;
 import com.windtower.config.client.WindTowerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import javax.swing.*;
  **/
 @Slf4j
 @Component
-public class SimuBootInit {
+public class SimuBootInit implements IWindTowerEngineObserver {
     @Autowired
     private ClientOS clientOS;
     private WindTowerView view;
@@ -32,6 +34,13 @@ public class SimuBootInit {
             clientOS.loadSimulationBasicAndInit(windtowerID);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateModel(WindTowerModel model) {
+        if(view != null) {
+            view.updateUI(model);
         }
     }
 }

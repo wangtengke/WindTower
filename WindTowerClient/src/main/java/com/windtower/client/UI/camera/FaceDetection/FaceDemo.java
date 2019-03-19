@@ -1,4 +1,4 @@
-package cn.WindElectricity.FaceDetection;
+package com.windtower.client.UI.camera.FaceDetection;
 
 import org.opencv.core.*;
 import org.opencv.objdetect.CascadeClassifier;

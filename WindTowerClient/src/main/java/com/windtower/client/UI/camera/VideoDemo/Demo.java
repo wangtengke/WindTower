@@ -1,10 +1,10 @@
-package cn.WindElectricity.VideoDemo;
+package com.windtower.client.UI.camera.VideoDemo;
 
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
-
+//import org.bytedeco.javacv.OpenCVFrameGrabber;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -40,7 +40,7 @@ public class Demo {
         // 监听拍摄
         take_photo.addMouseListener(new TakePhotoMouseAdapter(take_photo, camera));
         // 监听保存
-        save_photo.addMouseListener(new SavePhotoMouseAdapter(grabbedImage));
+//        save_photo.addMouseListener(new SavePhotoMouseAdapter(grabbedImage));
         // 关闭
         cancle.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent arg0) {

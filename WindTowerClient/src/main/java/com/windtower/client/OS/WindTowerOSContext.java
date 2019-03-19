@@ -1,5 +1,6 @@
 package com.windtower.client.OS;
 
+import com.alibaba.fastjson.JSON;
 import com.windtower.client.Entity.Frame;
 import com.windtower.client.JSSC.arm.Arm2ComputerNormalFrame;
 import com.windtower.client.Model.WindTowerArmFeedbackState;
@@ -8,9 +9,11 @@ import com.windtower.client.UI.WindTowerModel;
 import javafx.util.converter.DateTimeStringConverter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
+import com.windtower.client.activemq.producer.*;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -30,6 +33,10 @@ import java.util.concurrent.*;
 public class WindTowerOSContext {
     @Resource
     FrameRepository frameRepository;
+    @Resource
+    Producer producer;
+    @Resource
+    Frame frame1;
     private WindTowerModel model = new WindTowerModel();
     //数据帧队列
     public static BlockingQueue<Arm2ComputerNormalFrame> arm2ComputerNormalFrames = new LinkedBlockingQueue<Arm2ComputerNormalFrame>();
@@ -46,7 +53,6 @@ public class WindTowerOSContext {
         dspFeedbackState.WindFarmId = frame.WindFarmId;
         //存储数据库
         frame2DB.submit(()->{
-            Frame frame1 = new Frame();
             frame1.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS") .format(new Date()));
             frame1.setAngleX(frame.getAngleX());
             frame1.setAngleY(frame.getAngleY());
@@ -58,7 +64,10 @@ public class WindTowerOSContext {
             frame1.setWindFarmId(frame.getWindFarmId());
             frameRepository.saveAndFlush(frame1);
         });
-        log.info("updateArmState|called");
-
+//        frame.toString();
+        // 向server端发送
+        frame1.setBytes(null);
+        String objectToJson = JSON.toJSONString(frame1);
+        producer.send(objectToJson);
     }
 }

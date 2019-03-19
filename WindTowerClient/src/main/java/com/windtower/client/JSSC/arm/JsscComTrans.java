@@ -1,6 +1,7 @@
 package com.windtower.client.JSSC.arm;
 
 import com.windtower.client.JSSC.interfaces.IWindTowerBlackBox;
+import com.windtower.client.OS.WindTowerOSContext;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -143,18 +144,18 @@ public class JsscComTrans extends AbsComTrans implements SerialPortEventListener
     private Arm2ComputerNormalFrame getFrameQueueTake() throws Exception {
         int queueLen = this.FrameQueueLen;
         int warningLen = Math.max(queueLen * 4 / 5, 1);
-        if(arm2ComputerNormalFrames.size() > warningLen) {
+        if(WindTowerOSContext.arm2ComputerNormalFrames.size() > warningLen) {
             //dsp2ComputerNormalFrames.clear();
             //?????????????frame
-            log.info("getFrameQueueTake|arm2ComputerNormalFrames {} size"+arm2ComputerNormalFrames.size());
+            log.info("getFrameQueueTake|arm2ComputerNormalFrames {} size"+WindTowerOSContext.arm2ComputerNormalFrames.size());
             Arm2ComputerNormalFrame frame = null;
-            while(arm2ComputerNormalFrames.size() > 0) {
-                log.info("dsp2ComputerNormalFrames|discard frame|dsp2ComputerNormalFrames size"+arm2ComputerNormalFrames.size());
-                frame = arm2ComputerNormalFrames.take();
+            while(WindTowerOSContext.arm2ComputerNormalFrames.size() > 0) {
+                log.info("dsp2ComputerNormalFrames|discard frame|dsp2ComputerNormalFrames size"+WindTowerOSContext.arm2ComputerNormalFrames.size());
+                frame = WindTowerOSContext.arm2ComputerNormalFrames.take();
             }
             return frame;
         }
-        return arm2ComputerNormalFrames.take();
+        return WindTowerOSContext.arm2ComputerNormalFrames.take();
     }
 
     @Override
@@ -200,7 +201,7 @@ public class JsscComTrans extends AbsComTrans implements SerialPortEventListener
                             if (msgPack[27] == (byte)0x07) {
                                 log.info("frame right!");
                                 Arm2ComputerNormalFrame frame = new Arm2ComputerNormalFrame(msgPack);
-                                boolean isPass = arm2ComputerNormalFrames.offer(frame);
+                                boolean isPass = WindTowerOSContext.arm2ComputerNormalFrames.offer(frame);
                                 log.info(String.format("offer frame to queue:%b",isPass));
                             }
                             state = 0;

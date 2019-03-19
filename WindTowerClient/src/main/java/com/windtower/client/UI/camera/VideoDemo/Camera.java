@@ -1,4 +1,4 @@
-package cn.WindElectricity.VideoDemo;
+package com.windtower.client.UI.camera.VideoDemo;
 
 public class Camera {
     private Boolean state = true;

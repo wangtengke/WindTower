@@ -1,4 +1,4 @@
-package cn.WindElectricity.PaintDetection;
+package com.windtower.client.UI.camera.PaintDetection;
 
 /*
  * 利用背景去除方式，把被腐蚀部分先去掉，再依次进行灰度，二值，获取轮廓，在原图上加上轮廓
@@ -14,7 +14,6 @@ import java.util.List;
 
 import static org.opencv.imgcodecs.Imgcodecs.imwrite;
 import static org.opencv.imgproc.Imgproc.*;
-import static org.opencv.imgproc.Imgproc.drawContours;
 
 public class doBackgroundRemoval {
 

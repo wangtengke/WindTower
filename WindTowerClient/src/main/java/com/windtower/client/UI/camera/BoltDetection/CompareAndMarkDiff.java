@@ -1,5 +1,6 @@
-package cn.WindElectricity.BoltDetection;
+package com.windtower.client.UI.camera.BoltDetection;
 
+import com.windtower.client.UI.WindTowerModel;
 import org.opencv.core.*;
 
 import java.util.ArrayList;
@@ -142,6 +143,7 @@ public class CompareAndMarkDiff {
         }
 
         double standardLine = (double)white / (double)(white + black);
+        WindTowerModel.loose = standardLine;
         System.out.println(standardLine);
         if(standardLine > 0.003){
             System.out.println("螺栓出现松动");

@@ -1,4 +1,4 @@
-package cn.WindElectricity.ColorExtract;
+package com.windtower.client.UI.camera.ColorExtract;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

@@ -1,6 +1,18 @@
 package com.windtower.client.UI;
 
+import com.windtower.client.UI.swing.SavePhotoMouseAdapter;
 import com.windtower.client.UI.interfaces.IWindTowerStateObserver;
+import com.windtower.client.UI.swing.AnglePoint;
+import com.windtower.client.UI.swing.JudgePhotoMouseAdapter;
+import com.windtower.client.UI.swing.MyCamera;
+import com.windtower.client.UI.swing.MyPanel;
+import com.windtower.config.client.WindTowerProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacv.CanvasFrame;
+import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.OpenCVFrameConverter;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +24,25 @@ import java.awt.*;
  * @author: wangtengke
  * @create: 2018-12-27
  **/
+@Slf4j
 public class WindTowerView implements IWindTowerStateObserver,Runnable{
-    private JFrame frame;
+    private final static float  DemarcateXAngle= WindTowerProperties.getInstance().getDemarcateXAngle();
+    private final static float  DemarcateYAngle= WindTowerProperties.getInstance().getDemarcateYAngle();
+
+    private CanvasFrame frame;
     private JPanel panel1;
     private JPanel panel2;
+    //摄像头区域
+    private JPanel cameraPanel;
+    //摄像头画布
+    private CanvasFrame cameraCanvas;
+    //新建摄像头
+    private MyCamera myCamera;
+    //坐标轴
+    private MyPanel myPanel;
+
+    //螺栓是否松动显示结果
+    private JTextField loose;
     //标定
     private JButton calibration;
     //判断
@@ -30,55 +57,87 @@ public class WindTowerView implements IWindTowerStateObserver,Runnable{
     private JTextField Xdata;
     //Y轴
     private JTextField Ydata;
+    //X 度
+    private JLabel Xangle;
+    //Y 度
+    private JLabel Yangle;
+    //水深
+    private JLabel WaterDepth;
+
+    private JTextField WaterDepthNum;
+
+    private JLabel WaterDepthCm;
     public WindTowerView() {
         initComponents();
     }
 
     private void initComponents() {
-        frame = new JFrame("塔筒检测系统");
+        frame = new CanvasFrame("塔筒检测系统");
         frame.setLayout(null);
-        frame.setSize(1000,500);
+//        frame.setSize(1000,500);
+        //摄像头位置
+        myCamera = new MyCamera();
 
         //左边
         panel1 = new JPanel();
         panel1.setLayout(null);
-        panel1.setBounds(0, 0, 500, 500);
+        panel1.setBounds(0, 400, 500, 500);
 
         //右边
         panel2 = new JPanel();
         panel2.setLayout(null);
-        panel2.setBounds(501,0,500,500);
+        panel2.setBounds(501,350,500,500);
+
+        myPanel = new MyPanel(new AnglePoint(0,0));
+        myPanel.setLayout(null);
+        myPanel.setBounds(501,0,500,350);
+
+
+        loose = new JTextField();
+        loose.setBounds(20,0,50,30);
 
         calibration = new JButton("标定");
         calibration.setFont(new Font("宋体", Font.BOLD, 12));
-        calibration.setBounds(100,400,80,30);
-//        calibration.setText("标定");
+        calibration.setBounds(100,0,80,30);
+
         judge = new JButton("判断");
-        judge.setBounds(200,400,80,30);
+        judge.setBounds(200,0,80,30);
         judge.setFont(new Font("宋体", Font.BOLD, 12));
-//        judge.setText("判断");
 
         exit = new JButton("退出");
-        exit.setBounds(300,400,80,30);
+        exit.setBounds(300,0,80,30);
         exit.setFont(new Font("宋体", Font.BOLD, 12));
-//        exit.setText("退出");
+
 
         Xlabel = new JLabel("X轴");
-        Xlabel.setBounds(0,400,80,30);
-//        Xlabel.setText("X轴");
-
-        Ylabel = new JLabel("Y轴");
-        Ylabel.setBounds(120,400,80,30);
-//        Ylabel.setText("Y轴");
+        Xlabel.setBounds(20,50,30,30);
 
         Xdata = new JTextField();
-        Xdata.setBounds(60,400,80,30);
+        Xdata.setBounds(50,50,80,30);
+
+        Xangle = new JLabel("度");
+        Xangle.setBounds(132,50,20,30);
+
+        Ylabel = new JLabel("Y轴");
+        Ylabel.setBounds(170,50,30,30);
 
         Ydata = new JTextField();
-        Ydata.setBounds(180,400,80,30);
+        Ydata.setBounds(200,50,80,30);
 
+        Yangle = new JLabel("度");
+        Yangle.setBounds(282,50,20,30);
+
+        WaterDepth = new JLabel("水深");
+        WaterDepth.setBounds(320,50,30,30);
+        WaterDepthNum = new JTextField();
+        WaterDepthNum.setBounds(352,50,50,30);
+        WaterDepthCm = new JLabel("cm");
+        WaterDepthCm.setBounds(404,50,30,30);
         frame.add(panel1);
         frame.add(panel2);
+        frame.add(myPanel);
+
+        panel1.add(loose);
         panel1.add(calibration);
         panel1.add(judge);
         panel1.add(exit);
@@ -87,110 +146,64 @@ public class WindTowerView implements IWindTowerStateObserver,Runnable{
         panel2.add(Ylabel);
         panel2.add(Xdata);
         panel2.add(Ydata);
-        frame.setVisible(true);
-//        jPanel2 = new javax.swing.JPanel();
-//        jLabel1 = new javax.swing.JLabel();
-//        jLabel2 = new javax.swing.JLabel();
-//        jTextField1 = new javax.swing.JTextField();
-//        jTextField2 = new javax.swing.JTextField();
-//
-////        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-//
-//        jButton1.setText("jButton1");
-//
-//        jButton2.setText("jButton2");
-//
-//        jButton3.setText("jButton3");
-//
-//        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-//        jPanel1.setLayout(jPanel1Layout);
-//        jPanel1Layout.setHorizontalGroup(
-//                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(jPanel1Layout.createSequentialGroup()
-//                                .addComponent(jButton1)
-//                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//                                .addComponent(jButton2)
-//                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-//                                .addComponent(jButton3)
-//                                .addGap(0, 10, Short.MAX_VALUE))
-//        );
-//        jPanel1Layout.setVerticalGroup(
-//                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-//                                .addGap(0, 143, Short.MAX_VALUE)
-//                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-//                                        .addComponent(jButton1)
-//                                        .addComponent(jButton2)
-//                                        .addComponent(jButton3)))
-//        );
-//
-//        jLabel1.setText("X轴");
-//
-//        jLabel2.setText("Y轴");
-//
-//        jTextField1.setToolTipText("");
-//        jTextField1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-//
-//        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                jTextField2ActionPerformed(evt);
-//            }
-//        });
-//
-//        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-//        jPanel2.setLayout(jPanel2Layout);
-//        jPanel2Layout.setHorizontalGroup(
-//                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(jPanel2Layout.createSequentialGroup()
-//                                .addContainerGap(42, Short.MAX_VALUE)
-//                                .addComponent(jLabel1)
-//                                .addGap(18, 18, 18)
-//                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addGap(18, 18, 18)
-//                                .addComponent(jLabel2)
-//                                .addGap(18, 18, 18)
-//                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addGap(31, 31, 31))
-//        );
-//        jPanel2Layout.setVerticalGroup(
-//                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-//                                .addGap(0, 0, Short.MAX_VALUE)
-//                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-//                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                        .addComponent(jLabel2)
-//                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-//        );
-//
-//        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-//        getContentPane().setLayout(layout);
-//        layout.setHorizontalGroup(
-//                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(layout.createSequentialGroup()
-//                                .addContainerGap()
-//                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                .addContainerGap())
-//        );
-//        layout.setVerticalGroup(
-//                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-//                                .addContainerGap()
-//                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-//                                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-//                                .addGap(124, 124, 124))
-//        );
+        panel2.add(Xangle);
+        panel2.add(Yangle);
+        panel2.add(WaterDepth);
+        panel2.add(WaterDepthNum);
+        panel2.add(WaterDepthCm);
 
+        new Thread(()->{
+            while (true) {
+                try {
+                    frame.showImage(myCamera.grabber.grab());
+                    if(frame.getSize().width!=1000)
+                        frame.setSize(1000,500);
+                    Thread.sleep(50);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        frame.setSize(1000,500);
+        frame.setVisible(true);
+
+        OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
+        opencv_core.IplImage grabbedImage = null;
+        try {
+            grabbedImage = converter.convertToIplImage(myCamera.grabber.grab());
+        } catch (FrameGrabber.Exception e) {
+            e.printStackTrace();
+        }
+//        SavePhotoMouseAdapter.getInstance().iplImage = grabbedImage;
+        calibration.addMouseListener(new SavePhotoMouseAdapter(grabbedImage));
+
+        judge.addMouseListener(new JudgePhotoMouseAdapter(grabbedImage));
 
     }
 
     @Override
     public void updateUI(WindTowerModel model) {
-        Xdata.setText(String.valueOf(model.armFeedbackState.AngleX));
-        Ydata.setText(String.valueOf(model.armFeedbackState.AngleY));
+        Xdata.setText(String.format("%.3f",(float) model.armFeedbackState.AngleX/1000-DemarcateXAngle));
+        Ydata.setText(String.format("%.3f",-((float) model.armFeedbackState.AngleY/1000-DemarcateYAngle)));
+        AnglePoint anglePoint = new AnglePoint((float) model.armFeedbackState.AngleX/1000-DemarcateXAngle,(float) model.armFeedbackState.AngleY/1000-DemarcateYAngle);
+        frame.remove(myPanel);
+        myPanel = new MyPanel(anglePoint);
+        myPanel.setLayout(null);
+        myPanel.setBounds(501,0,500,350);
+        frame.add(myPanel);
+        myPanel.validate();
+        myPanel.repaint();
+    }
+
+    @Override
+    public void updateLoose(WindTowerModel windTowerModel) {
+        loose.setText(windTowerModel.loose>0.006?"松动":"未松动");
     }
 
     @Override

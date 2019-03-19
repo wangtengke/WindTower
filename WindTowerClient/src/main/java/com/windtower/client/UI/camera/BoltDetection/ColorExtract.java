@@ -1,15 +1,17 @@
-package cn.WindElectricity.BoltDetection;
+package com.windtower.client.UI.camera.BoltDetection;
 
-import org.opencv.core.*;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 import static org.opencv.core.Core.bitwise_and;
-import static org.opencv.core.Core.bitwise_not;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.core.CvType.CV_8UC3;
 import static org.opencv.imgcodecs.Imgcodecs.imread;
 import static org.opencv.imgcodecs.Imgcodecs.imwrite;
-import static org.opencv.imgproc.Imgproc.COLOR_BGR2HSV;
 import static org.opencv.imgproc.Imgproc.cvtColor;
 
 /**
@@ -60,7 +62,7 @@ public class ColorExtract {
     }
 
     public Mat ColorExtract(String path){
-        Mat img = imread(path);
+        Mat img = Imgcodecs.imread(path);
         String name = path.substring(path.lastIndexOf("/")+1,path.lastIndexOf("."));
 
         Mat imgHSV = new Mat(img.rows(), img.cols(), CV_8UC3);

@@ -1,4 +1,4 @@
-package cn.WindElectricity.FaceDetection.utils;
+package com.windtower.client.UI.camera.FaceDetection.utils;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;

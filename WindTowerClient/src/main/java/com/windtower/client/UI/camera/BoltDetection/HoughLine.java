@@ -1,4 +1,4 @@
-package cn.WindElectricity.BoltDetection;
+package com.windtower.client.UI.camera.BoltDetection;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

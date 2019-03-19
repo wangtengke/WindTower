@@ -1,12 +1,9 @@
-package cn.WindElectricity.PaintDetection;
+package com.windtower.client.UI.camera.PaintDetection;
 
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.opencv_core.IplImage;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.opencv.imgcodecs.Imgcodecs.imwrite;

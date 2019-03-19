@@ -1,6 +1,8 @@
 package com.windtower.client.Entity;
 
 import lombok.Data;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,6 +14,7 @@ import java.util.Date;
  * @author: wangtengke
  * @create: 2018-12-22
  **/
+@Component
 @Entity
 @Data
 @Table(name="frame")
@@ -44,5 +47,4 @@ public class Frame {
     //数据长度
     @Column(nullable = true)
     private int DataSize;
-
 }

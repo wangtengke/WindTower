@@ -1,4 +1,4 @@
-package com.windtower.client.UI.camera.VideoDemo;
+package com.windtower.client.UI.swing;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacpp.opencv_core;
@@ -23,7 +23,7 @@ import java.util.Date;
 @Slf4j
 public class SavePhotoMouseAdapter extends MouseAdapter {
 
-    private static opencv_core.IplImage iplImage;
+    public static opencv_core.IplImage iplImage;
 
     public SavePhotoMouseAdapter(opencv_core.IplImage iplImage) {
         SavePhotoMouseAdapter.iplImage = iplImage;
@@ -41,7 +41,7 @@ public class SavePhotoMouseAdapter extends MouseAdapter {
         try {
             if (iplImage != null) {
                 // 保存图片，文件名按日期命名
-                cvSaveImage("C:\\Users\\wangtengke\\Desktop\\" + df.format(new Date()) + ".png", iplImage);
+                cvSaveImage("C:\\Users\\wangtengke\\Desktop\\base.png", iplImage);
                 // 发送修改用户头像请求...也可以直接发送字节数组到服务器，由服务器上传图片并修改用户头像
                 JOptionPane.showMessageDialog(myFrame, "上传成功");
 
@@ -65,7 +65,6 @@ public class SavePhotoMouseAdapter extends MouseAdapter {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ImageIO.write(toBufferedImage(image), "jpg", out);
         byte[] bs = out.toByteArray();
-
         // 保存字节数组为图片到本地
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(bs, 0, bs.length);

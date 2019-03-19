@@ -6,7 +6,7 @@
     <groupId>com</groupId>
     <artifactId>windtower</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>windtower</name>
     <description>Demo project for Spring Boot</description>
@@ -34,7 +34,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+        <!-- 引入fastjson依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.12</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -45,23 +54,38 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.intel.analytics.bigdl.core.native.opencv/opencv-java-win64 -->
         <dependency>
-            <groupId>com.intel.analytics.bigdl.core.native.opencv</groupId>
-            <artifactId>opencv-java-win64</artifactId>
-            <version>0.7.1</version>
+            <groupId>com.local</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.local</groupId>
+            <artifactId>opencv</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.local</groupId>
+            <artifactId>javacv</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.bytedeco/javacpp -->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacpp</artifactId>
+            <version>1.4.3</version>
         </dependency>
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <!--<build>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.springframework.boot</groupId>-->
+                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
 
 
 </project>

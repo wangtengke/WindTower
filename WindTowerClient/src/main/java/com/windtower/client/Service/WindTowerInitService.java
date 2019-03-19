@@ -70,6 +70,7 @@ public class WindTowerInitService implements IWindTowerInitService {
 
     private void startAllService(Map<String, Object> params) throws Exception {
         windTowerStatusMonitorService.startService(params);
+        windTowerUIService.startService(params);
     }
 
     @Override

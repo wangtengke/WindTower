@@ -1,7 +1,7 @@
-package cn.WindElectricity;
+package com.windtower.client.UI.camera;
 
-import cn.WindElectricity.PaintDetection.BackgroundRemove;
-import cn.WindElectricity.PaintDetection.doBackgroundRemoval;
+
+import com.windtower.client.UI.camera.PaintDetection.BackgroundRemove;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 

@@ -13,4 +13,10 @@ import java.io.Serializable;
 public class WindTowerModel implements Serializable {
 
     public WindTowerArmFeedbackState armFeedbackState;
+
+    public static double loose = 0.0;
+
+    public WindTowerModel(){
+        this.armFeedbackState = new WindTowerArmFeedbackState();
+    }
 }
