@@ -13,8 +13,8 @@ public class MyCamera {
     public MyCamera(){
         //打开摄像头，获取视频
         OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
-        grabber.setImageWidth(350);
-        grabber.setImageHeight(350);
+        grabber.setImageWidth(400);
+        grabber.setImageHeight(400);
         this.grabber = grabber;
         //设置图片的宽和高
        try {

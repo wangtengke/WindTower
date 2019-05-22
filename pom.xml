@@ -54,21 +54,21 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.local</groupId>
-            <artifactId>ffmpeg</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.local</groupId>
-            <artifactId>opencv</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.local</groupId>
-            <artifactId>javacv</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.local</groupId>-->
+            <!--<artifactId>ffmpeg</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.local</groupId>-->
+            <!--<artifactId>opencv</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.local</groupId>-->
+            <!--<artifactId>javacv</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
         <!-- https://mvnrepository.com/artifact/org.bytedeco/javacpp -->
         <dependency>
             <groupId>org.bytedeco</groupId>
