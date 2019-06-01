@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.util.Arrays;
 
 /**
  * @program: windtower
@@ -17,41 +18,72 @@ import java.io.DataInputStream;
 public class Arm2ComputerNormalFrame {
     //字节数据
     public byte [] bytes;
-    //数据头 正确值 111
-    public int head;
-    //风场编号
-    public int WindFarmId;
-    //塔筒编号
-    public int TowerId;
-    //传感器编号
-    public int SensorId;
+    //标识符 正确值 111
+    public byte head;
+    //命令字
+    public byte command;
+    //传感器地址
+    public byte SensorId;
     //X轴数据
     public int AngleX;
     //Y轴数据
     public int AngleY;
     //数据长度
-    public int DataSize;
+    public byte DataSize;
+
+    public byte Checksum;
+
+    public String ultraframe;
     public Arm2ComputerNormalFrame(){}
     public Arm2ComputerNormalFrame(byte[] content) {
-        bytes = new byte[28];
-        for(int i=0;i<28;i++){
-            bytes[i] = content[i];
+        if(content.length>17){
+            head = 1;
+            ultraframe = Arrays.toString(content);
         }
-        try {
-            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-            DataInputStream dis = new DataInputStream(bais);
-            head        = dis.readInt();
-            WindFarmId  = dis.readInt();
-            TowerId     = dis.readInt();
-            SensorId    = dis.readInt();
-            AngleX      = dis.readInt();
-            AngleY      = dis.readInt();
-            DataSize    = dis.readInt();
-            log.info(String.format("head: %d|WindFarmId: %d|TowerId: %d|SensorId: %d|AngleX: %d|AngleY: %d|DataSize: %d",
-                    head,WindFarmId,TowerId,SensorId,AngleX,AngleY,DataSize));
-        }
-        catch (Exception e){
-            e.printStackTrace();
+        else {
+            bytes = new byte[17];
+            for (int i = 0; i < 17; i++) {
+                bytes[i] = content[i];
+            }
+            try {
+                ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+                DataInputStream dis = new DataInputStream(bais);
+                head = dis.readByte();
+                DataSize = dis.readByte();
+                SensorId = dis.readByte();
+                command = dis.readByte();
+                String s = "";
+                for (int i = 0; i < 4; i++) {
+                    int temp = dis.readByte() & 0xff;
+                    String hex = Integer.toHexString(temp);
+                    if (hex.length() < 2) hex = "0" + hex;
+                    s += hex;
+                }
+                if (s.charAt(0) == '1') {
+                    AngleX = -Integer.valueOf(s.substring(1));
+                } else {
+                    AngleX = Integer.valueOf(s.substring(1));
+                }
+                s = "";
+                for (int i = 0; i < 4; i++) {
+                    int temp = dis.readByte() & 0xff;
+                    String hex = Integer.toHexString(temp);
+                    if (hex.length() < 2) hex = "0" + hex;
+                    s += hex;
+                }
+                if (s.charAt(0) == '1') {
+                    AngleY = -Integer.valueOf(s.substring(1));
+                } else {
+                    AngleY = Integer.valueOf(s.substring(1));
+                }
+//            AngleX      = dis.readInt();
+//            AngleY      = dis.readInt();
+//            Checksum    = dis.readByte();
+                log.info(String.format("head: %d|DataSize: %d|SensorId: %d|command: %d|AngleX: %d|AngleY: %d|Checksum: %d",
+                        head, DataSize, SensorId, command, AngleX, AngleY, Checksum));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

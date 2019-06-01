@@ -68,6 +68,13 @@ public class WindTowerProperties {
         return Integer.valueOf(this.props.getProperty("COMM_PARITY"));
     }
 
+    public String getCommPortUltrasound(){
+        return this.props.getProperty("COMM_PORT_Ultrasound");
+    }
+
+    public int getCommBaudRateUltrasound(){
+        return Integer.valueOf(this.props.getProperty("COMM_BAUD_RATE_Ultrasound"));
+    }
     public int getDspQueueLen() {
         return Integer.valueOf(this.props.getProperty("dsp_queue_len","20"));
     }

@@ -61,7 +61,7 @@ public class SimulationComTrans extends AbsComTrans implements Runnable{
 
                 assemFrame(frame);
                 log.info(String.format("head: %d|WindFarmId: %d|TowerId: %d|SensorId: %d|AngleX: %d|AngleY: %d|DataSize: %d",
-                        frame.getHead(),frame.getWindFarmId(),frame.getTowerId(),frame.getSensorId(),frame.getAngleX(),frame.getAngleY(),frame.getDataSize()));
+                        frame.getHead(),frame.getAngleX(),frame.getHead(),frame.getSensorId(),frame.getAngleX(),frame.getAngleY(),frame.getDataSize()));
                 log.info("JsscCommComTrans|arm consumer take frame");
                 WindTowerOSContext.arm2ComputerNormalFrames.offer(frame);
                 if(observer != null){
@@ -82,13 +82,13 @@ public class SimulationComTrans extends AbsComTrans implements Runnable{
     }
 
     private void assemFrame(Arm2ComputerNormalFrame frame) {
-        frame.setHead(SimulationProperties.getInstance().getHead());
-        frame.setWindFarmId(SimulationProperties.getInstance().getWindFarmId());
-        frame.setTowerId(SimulationProperties.getInstance().getTowerId());
-        frame.setSensorId(SimulationProperties.getInstance().getSensorId());
-        frame.setAngleX(SimulationProperties.getInstance().getAngleX()+ (int)(Math.random()*100-50));
-        frame.setAngleY(SimulationProperties.getInstance().getAngleY()+ (int)(Math.random()*100-50));
-        frame.setDataSize(SimulationProperties.getInstance().getDataSize());
+//        frame.setHead(SimulationProperties.getInstance().getHead());
+//        frame.setWindFarmId(SimulationProperties.getInstance().getWindFarmId());
+//        frame.setTowerId(SimulationProperties.getInstance().getTowerId());
+//        frame.setSensorId(SimulationProperties.getInstance().getSensorId());
+//        frame.setAngleX(SimulationProperties.getInstance().getAngleX()+ (int)(Math.random()*100-50));
+//        frame.setAngleY(SimulationProperties.getInstance().getAngleY()+ (int)(Math.random()*100-50));
+//        frame.setDataSize(SimulationProperties.getInstance().getDataSize());
     }
 
     public void init() {

@@ -2,6 +2,7 @@ package com.windtower.client.JSSC.arm;
 
 import com.windtower.client.JSSC.interfaces.IWindTowerBlackBox;
 import com.windtower.client.OS.WindTowerOSContext;
+import com.windtower.config.client.WindTowerProperties;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -35,6 +36,10 @@ public class JsscComTrans extends AbsComTrans implements SerialPortEventListener
      * 数据buf
      */
     private byte[] msgPack = new byte[28];
+    /**
+     * 超声数据buf
+     */
+    private byte[] msgUltrasound = new byte[4096];
     //黑匣子
     private  IWindTowerBlackBox blackBox;
     //数据帧队列
@@ -163,22 +168,74 @@ public class JsscComTrans extends AbsComTrans implements SerialPortEventListener
         int eventVal = serialPortEvent.getEventValue();
         boolean isPortOpened = sPort.isOpened();
         log.info(String.format("serialEvent|called|eventVal:%d|isOpen:%b", eventVal, isPortOpened));
-        try {
-            int eventValue = serialPortEvent.getEventValue();
-            if(eventValue > 0){
-                log.info(String.format("serialEvent|buf readed|eventVal:%d", eventValue));
-                byte[] buf = sPort.readBytes();
-                int bufferSize = buf.length;
-                log.info(String.format("serialEvent|buf readed|bufferSize:%d", bufferSize));
-                if(bufferSize > RECV_BUF_MAX_LEN) {
-                    log.info(String.format("serialEvent|bufLen:%d|Too many bucketId in serial port recv buffer!!", buf.length));
-                    //return;
+        if(this.port.equals(WindTowerProperties.getInstance().getCommPortUltrasound())){
+            try {
+                int eventValue = serialPortEvent.getEventValue();
+                if (eventValue > 0) {
+                    log.info(String.format("serialEvent|buf readed|eventVal:%d", eventValue));
+                    byte[] buf = sPort.readBytes(4096);
+                    int bufferSize = buf.length;
+                    log.info(String.format("serialEvent|buf readed|bufferSize:%d", bufferSize));
+//                    if (bufferSize > RECV_BUF_MAX_LEN) {
+//                        log.info(String.format("serialEvent|bufLen:%d|Too many bucketId in serial port recv buffer!!", buf.length));
+//                        //return;
+//                    }
+                    processUltrasound(buf);
+                    log.info("serialEvent|done");
                 }
-                process(buf);
-                log.info("serialEvent|done");
+            } catch (Exception e) {
+                log.error("", e);
             }
+        }
+        else {
+            try {
+                int eventValue = serialPortEvent.getEventValue();
+                if (eventValue > 0) {
+                    log.info(String.format("serialEvent|buf readed|eventVal:%d", eventValue));
+                    byte[] buf = sPort.readBytes();
+                    int bufferSize = buf.length;
+                    log.info(String.format("serialEvent|buf readed|bufferSize:%d", bufferSize));
+                    if (bufferSize > RECV_BUF_MAX_LEN) {
+                        log.info(String.format("serialEvent|bufLen:%d|Too many bucketId in serial port recv buffer!!", buf.length));
+                        //return;
+                    }
+                    process(buf);
+                    log.info("serialEvent|done");
+                }
+            } catch (Exception e) {
+                log.error("", e);
+            }
+        }
+    }
+
+    private void processUltrasound(byte[] buf) {
+        try {
+            for(int i=0;i<buf.length;i++) {
+                byte newData = buf[i];
+                switch (state) {
+                    case 0:
+                        msgUltrasound[index++] = newData;
+                        if (index == 4095) {
+                            state = 1;
+                        }
+                        break;
+                    case 1:
+                        msgUltrasound[index++] = newData;
+                        index = 0;
+//                            if (msgPack[27] == (byte)0x07) {
+                        log.info("frame right!");
+                        Arm2ComputerNormalFrame frame = new Arm2ComputerNormalFrame(msgUltrasound);// update msg
+                        boolean isPass = WindTowerOSContext.arm2ComputerNormalFrames.offer(frame);
+                        log.info(String.format("offer Ultrasoundframe to queue:%b", isPass));
+//                            }
+                        state = 0;
+
+                        break;
+                }
+            }
+
         } catch (Exception e) {
-            log.error("", e);
+            log.error("",e);
         }
     }
 
@@ -190,23 +247,23 @@ public class JsscComTrans extends AbsComTrans implements SerialPortEventListener
                     case 0:
                         index = 0;
                         // ??????????
-                        if (newData == (byte)0xaa) {
+                        if (newData == (byte)0x77) {
                             state = 1;
                             msgPack[index++] = newData;
                         }
                         break;
                     case 1:
                         msgPack[index++] = newData;
-                        if(index==28){
-                            if (msgPack[27] == (byte)0x07) {
+                        if(index==17){
+//                            if (msgPack[27] == (byte)0x07) {
                                 log.info("frame right!");
                                 Arm2ComputerNormalFrame frame = new Arm2ComputerNormalFrame(msgPack);
                                 boolean isPass = WindTowerOSContext.arm2ComputerNormalFrames.offer(frame);
                                 log.info(String.format("offer frame to queue:%b",isPass));
-                            }
+//                            }
                             state = 0;
                         }
-                        else if(index>28){
+                        else if(index>17){
                             state = 0;
                         }
                         break;

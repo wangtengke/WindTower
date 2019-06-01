@@ -27,14 +27,14 @@ public class ClientBootInit implements IWindTowerEngineObserver {
     public void start(){
         log.info("bootInit|called");
         WindTowerProperties.getInstance().init();
-        try {
-            WindTowerView view = new WindTowerView();
-            this.view = view;
-        }
-        catch (Exception e){
-            this.view = null;
-            log.error("can't open camera");
-        }
+//        try {
+//            WindTowerView view = new WindTowerView();
+//            this.view = view;
+//        }
+//        catch (Exception e){
+//            this.view = null;
+//            log.error("can't open camera");
+//        }
         String windtowerID= WindTowerProperties.getInstance().getWindTowerID();
         log.info("windtowerID is [{}]",windtowerID);
         try {

@@ -105,7 +105,18 @@ public class WindTowerBootloader implements IWindTowerBootloader {
                 WindTowerProperties.getInstance().getDspQueueLen(),
                 blackbox
         );
-        comTranser.connect();
+        JsscComTrans comTranserUltrasound = new JsscComTrans(
+                WindTowerProperties.getInstance().getWindTowerID(),
+                WindTowerProperties.getInstance().getCommPortUltrasound(),
+                WindTowerProperties.getInstance().getCommBaudRateUltrasound(),
+                WindTowerProperties.getInstance().getDataBit(),
+                WindTowerProperties.getInstance().getStopBit(),
+                WindTowerProperties.getInstance().getParity(),
+                WindTowerProperties.getInstance().getDspQueueLen(),
+                blackbox
+        );
+//        comTranser.connect();
+        comTranserUltrasound.connect();
 
         //comTranser.initFilter(filters);
 

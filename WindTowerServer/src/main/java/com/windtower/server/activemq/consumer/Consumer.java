@@ -38,12 +38,12 @@ public class Consumer {
                 frame1.setTime(frame.getTime());
                 frame1.setAngleX(frame.getAngleX());
                 frame1.setAngleY(frame.getAngleY());
-                frame1.setBytes(frame.getBytes());
-                frame1.setDataSize(frame.getDataSize());
+//                frame1.setBytes(frame.getBytes());
+//                frame1.setDataSize(frame.getDataSize());
                 frame1.setHead(frame.getHead());
                 frame1.setSensorId(frame.getSensorId());
-                frame1.setTowerId(frame.getTowerId());
-                frame1.setWindFarmId(frame.getWindFarmId());
+//                frame1.setTowerId(frame.getTowerId());
+//                frame1.setWindFarmId(frame.getWindFarmId());
                 frameServerRepository.saveAndFlush(frame1);
             });
             log.info(frame.toString());

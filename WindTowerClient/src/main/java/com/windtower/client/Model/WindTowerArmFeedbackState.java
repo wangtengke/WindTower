@@ -11,14 +11,12 @@ import java.io.Serializable;
 public class WindTowerArmFeedbackState implements Serializable{
     //数据头 oxaa
     public int head;
-    //风场编号
-    public int WindFarmId;
-    //塔筒编号
-    public int TowerId;
     //传感器编号
     public int SensorId;
     //X轴数据
     public int AngleX;
     //Y轴数据
     public int AngleY;
+    //超声数据
+    public String ultraframe;
 }
